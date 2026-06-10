@@ -43,12 +43,16 @@ async def _get_data_from_source(name):
 async def get_yamaha_revision_table(name, can_use_cache):
     cached_data = get_data_from_cache(name, can_use_cache)
 
+    log_debug(f'Cached data: {cached_data}')
+
     should_update_cache = True
 
     if can_use_cache:
         return not should_update_cache, cached_data
 
     source_data = await _get_data_from_source(name)
+
+    log_debug(f'Source data: {source_data}')
 
     if source_data:
         return should_update_cache, source_data

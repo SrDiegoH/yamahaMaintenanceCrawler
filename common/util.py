@@ -41,3 +41,12 @@ MOTORCYCLE_MODELS = {
     'CROSSER 150 Z ABS 2025 a 2026': '30170', 
     'CROSSER 150 S ABS 2025 a 2026': '30169'
 }
+
+_TRUTHY_VALUES = { '1', 's', 'sim', 't', 'true', 'v', 'verdade', 'verdadeiro', 'y', 'yes' }
+
+def get_parameter(query_parameters, name, default=None):
+    value = query_parameters.get(name, default)
+    return None if value is None else str(value).strip().lower()
+
+def get_cache_parameter(query_parameters, name, default=False):
+    return get_parameter(query_parameters, name, default) in _TRUTHY_VALUES

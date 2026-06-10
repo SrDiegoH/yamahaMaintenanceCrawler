@@ -1,6 +1,6 @@
 from playwright.async_api import async_playwright
 
-from common.constants import MOTORCYCLE_MODELS
+from common.util import MOTORCYCLE_MODELS
 
 async def request_yamaha_data(name):
     async with async_playwright() as playwright:
