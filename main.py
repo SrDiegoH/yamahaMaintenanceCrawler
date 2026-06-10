@@ -77,38 +77,50 @@ async def _get_yamaha_data(name):
     async with async_playwright() as playwright:
         browser = None
         context = None
+        page = None
         try:
             browser = await playwright.chromium.launch(
                 headless=True,
                 args=[
-                    "--disable-gpu",                      # Desativa aceleração de hardware (economiza muita RAM)
-                    "--single-process",                   # Roda tudo em uma única thread (essencial para containers pequenos)
-                    "--no-sandbox",                       # Evita overhead de segurança desnecessário no container
-                    "--disable-setuid-sandbox",
-                    "--disable-dev-shm-usage",            # Força o Chrome a usar a memória do sistema em vez de /dev/shm
-                    "--no-zygote",                        # Desativa o processo de fork do Chrome
-                    "--js-flags=--max-old-space-size=128" # Limpa o garbage collector do motor V8 com mais frequência
+                    '--disable-gpu',                      # Desativa aceleração de hardware (economiza muita RAM)
+                    '--single-process',                   # Roda tudo em uma única thread (essencial para containers pequenos)
+                    '--no-sandbox',                       # Evita overhead de segurança desnecessário no container
+                    '--disable-setuid-sandbox',
+                    '--disable-dev-shm-usage',            # Força o Chrome a usar a memória do sistema em vez de /dev/shm
+                    '--no-zygote',                        # Desativa o processo de fork do Chrome'--disable-extensions',
+                    '--disable-component-update',
+                    '--disable-default-apps',   
+                    '--js-flags=--max-old-space-size=128' # Limpa o garbage collector do motor V8 com mais frequência
                 ]
             )
-            context = await browser.new_context(user_agent=user_agent)
 
-            await context.add_cookies([
-                {
-                    'name': 'SOFT_LOGIN',
-                    'value': 'eyJraWQiOiJTb2Z0TG9naW5LZXkiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzOTgyMzc3NDA3IiwiaXNzIjoic3RvcmVmcm9udFVJIiwiZXhwIjoxNzk3OTY2NzIzOTE3LCJpYXQiOjE3NjM4Mzg3MjM5MTd9.VbKqvVknOQ_p7WHhYhHiW5kx0LfG96knAo8bcKo3j6g',
-                    'domain': domain,
-                    'path': '/'
-                },
-                {
-                    'name': 'carrinho-id',
-                    'value': '3786ad2c-490e-4ba3-8c62-6854957c6bcd',
-                    'domain': domain,
-                    'path': '/'
+            context = await browser.new_context(
+                user_agent=user_agent,
+                extra_http_headers={
+                    'Cookie': f'SOFT_LOGIN=eyJraWQiOiJTb2Z0TG9naW5LZXkiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzOTgyMzc3NDA3IiwiaXNzIjoic3RvcmVmcm9udFVJIiwiZXhwIjoxNzk3OTY2NzIzOTE3LCJpYXQiOjE3NjM4Mzg3MjM5MTd9.VbKqvVknOQ_p7WHhYhHiW5kx0LfG96knAo8bcKo3j6g; carrinho-id=3786ad2c-490e-4ba3-8c62-6854957c6bcd'
                 }
-            ])
+            )
+
+            # context = await browser.new_context(user_agent=user_agent)
+
+            # await context.add_cookies([
+            #     {
+            #         'name': 'SOFT_LOGIN',
+            #         'value': 'eyJraWQiOiJTb2Z0TG9naW5LZXkiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzOTgyMzc3NDA3IiwiaXNzIjoic3RvcmVmcm9udFVJIiwiZXhwIjoxNzk3OTY2NzIzOTE3LCJpYXQiOjE3NjM4Mzg3MjM5MTd9.VbKqvVknOQ_p7WHhYhHiW5kx0LfG96knAo8bcKo3j6g',
+            #         'domain': domain,
+            #         'path': '/'
+            #     },
+            #     {
+            #         'name': 'carrinho-id',
+            #         'value': '3786ad2c-490e-4ba3-8c62-6854957c6bcd',
+            #         'domain': domain,
+            #         'path': '/'
+            #     }
+            # ])
 
             page = await context.new_page()
 
+            await page.route("**/*", lambda route: route.abort() if route.request.resource_type in ["image", "media", "font", "stylesheet"] else route.continue_())
             await page.goto(f'https://www.yamaha-motor.com.br')
 
             headers = {
