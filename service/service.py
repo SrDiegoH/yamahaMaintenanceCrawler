@@ -32,11 +32,10 @@ def _refine_data(data):
 async def _get_data_from_source(name):
     status, response = await request_yamaha_data(name)
 
-    log_debug('Status:', status, 'Response:', response)
+    log_debug(f'Status: {status} - Response: {response}')
 
     if status == 200:
         data = _refine_data(response)
-        log_debug('Data:', data)
         return data
 
     raise HTTPException(status_code=status, detail='Erro ao consultar dados da Yamaha')

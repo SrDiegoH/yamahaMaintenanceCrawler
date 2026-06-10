@@ -8,7 +8,7 @@ app = FastAPI()
 
 @app.get('/')
 async def index(name, should_delete_all_cache=0, should_clear_cached_data=0, should_use_cache=1):
-    log_debug('Name: ', name, 'Should delete all cache?', should_delete_all_cache, 'Should clear cached data?', should_clear_cached_data, 'Should use cache?', should_use_cache)
+    log_debug(f'Name: {name} - Should delete all cache? {should_delete_all_cache} - Should clear cached data? {should_clear_cached_data} - Should use cache? {should_use_cache}')
 
     if not name:
         raise HTTPException(status_code=400, detail='O parâmetro "name" é obrigatório')
