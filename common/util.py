@@ -44,9 +44,8 @@ MOTORCYCLE_MODELS = {
 
 _TRUTHY_VALUES = { '1', 's', 'sim', 't', 'true', 'v', 'verdade', 'verdadeiro', 'y', 'yes' }
 
-def get_parameter(query_parameters, name, default=None):
-    value = query_parameters.get(name, default)
-    return None if value is None else str(value).strip().lower()
+def get_parameter(parameter, default=None):
+    return default if parameter is None else str(parameter).strip().lower()
 
-def get_cache_parameter(query_parameters, name, default=False):
-    return get_parameter(query_parameters, name, default) in _TRUTHY_VALUES
+def get_cache_parameter(parameter, default=False):
+    return get_parameter(parameter, default) in _TRUTHY_VALUES
