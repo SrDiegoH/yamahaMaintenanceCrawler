@@ -13,7 +13,7 @@ _ONE_WEEK   = 7  * _ONE_DAY
 
 _build_key = lambda id: f'YAMAHAMAINTENANCECRAWLER:{id}'
 
-def upsert_cache(id, data):
+def insert_cache_data(id, data):
     key = _build_key(id)
 
     log_info(f'New cache entry created for "{id}"') if not redis.set(key, f'{data}', ex=_ONE_WEEK, get=True) else log_info(f'Cache upserted for "{id}"')

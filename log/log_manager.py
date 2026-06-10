@@ -9,8 +9,8 @@ _LEVELS = {
     'ERROR': 2
 }
 
-LOG_LEVEL = os.environ.get('LOG_LEVEL', 'ERROR').upper()
-_CURRENT_LEVEL = _LEVELS.get(LOG_LEVEL, 1)
+LOG_LEVEL = os.environ.get('LOG_LEVEL', 'DEBUG').upper()
+_CURRENT_LEVEL = _LEVELS.get(LOG_LEVEL, 0)
 
 def _log(level_name, message):
     if _LEVELS[level_name] >= _CURRENT_LEVEL:

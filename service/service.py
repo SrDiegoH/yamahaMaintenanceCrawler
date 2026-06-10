@@ -1,12 +1,10 @@
 import json
 
-from fastapi import FastAPI, HTTPException
+from fastapi import HTTPException
 
 from cache.cache_manager import get_data_from_cache
 from client.yamaha import request_yamaha_data
 from log.log_manager import log_debug
-
-app = FastAPI()
 
 _get_revision_data = lambda revision: {
     'revisionByKm': revision['revisionByKm'],

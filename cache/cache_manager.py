@@ -17,8 +17,8 @@ def _read_cache(id):
         return file_cache.read_cache(id)
 
 def _upsert_cache(id, data):
-    redis_cache.upsert_cache(id, data)
-    file_cache.upsert_cache(id, data)
+    redis_cache.insert_cache_data(id, data)
+    file_cache.insert_cache_data(id, data)
 
 def get_data_from_cache(id, can_use_cache):
     if not can_use_cache:
