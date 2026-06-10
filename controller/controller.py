@@ -25,7 +25,7 @@ async def index(name, should_delete_all_cache, should_clear_cached_data, should_
     log_info(f'Final Data: {data}')
 
     if not data:
-        raise HTTPException(status_code=404, detail='Não encontrado')
+        raise HTTPException(status_code=404, detail='Não foram encontrados dados de revisão encontrado para o veiculo {name}')
 
     if can_use_cache and should_update_cache:
         upsert_cache_data(name, data)
