@@ -13,8 +13,8 @@ LOG_LEVEL = os.environ.get('LOG_LEVEL', 'DEBUG').upper()
 _CURRENT_LEVEL = _LEVELS.get(LOG_LEVEL, 0)
 
 def _log(level_name, message):
-    if _LEVELS[level_name] >= _CURRENT_LEVEL:
-        print(f'{datetime.now().strftime(_DATE_FORMAT)} - {level_name} - {message}')
+    #if _LEVELS[level_name] >= _CURRENT_LEVEL:
+    print(f'{datetime.now().strftime(_DATE_FORMAT)} - {level_name} - {message}')
 
 def log_error(message):
     _log('ERROR', message)
