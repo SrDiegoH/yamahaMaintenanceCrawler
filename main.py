@@ -59,7 +59,7 @@ def _refine_data(data):
     if '1:' not in data:
         raise HTTPException(status_code=500, detail=f'Erro ao consultar dados da Yamaha. Data: {data}')
 
-    content = data.split('1:')[1]
+    content = data.split('1:')[1].replace('1:', '')
     parsed_json = json.loads(content)
     items = parsed_json.get('result', {}).get('items', [])
 
