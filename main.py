@@ -56,9 +56,17 @@ _get_revision_data = lambda revision: {
 }
 
 def _refine_data(data):
-    content = data.split('1:')[1]
+    if '1:' not in data:
+        raise HTTPException(status_code=500, detail=f'Erro ao consultar dados da Yamaha. Data: {data}')
 
-    revisions = json.loads(content).result.items[0].revisions
+    content = data.split('1:')[1]
+    parsed_json = json.loads(content)
+    items = parsed_json.get('result', {}).get('items', [])
+
+    if not items:
+        raise HTTPException(status_code=404, detail=f'Nenhum dado de revisão encontrado para este veiculo. Data: {data}')
+
+    revisions = items[0].get('revisions', [])
 
     return list(map(_get_revision_data, revisions))
 
@@ -123,11 +131,15 @@ async def _get_yamaha_data(name):
 @app.get('/')
 async def index(name=None):
     if not name:
-        raise HTTPException(status_code=400, detail="O parâmetro 'name' é obrigatório.")
+        raise HTTPException(status_code=400, detail='O parâmetro "name" é obrigatório')
 
     status, response = await _get_yamaha_data(name)
 
-    if status == 200:
-        return _refine_data(response)
+    print('Status:', status, 'Response:', response)
 
-    raise HTTPException(status_code=status, detail="Erro ao consultar dados da Yamaha.")
+    if status == 200:
+        data = _refine_data(response)
+        print('Data:', data)
+        return data
+
+    raise HTTPException(status_code=status, detail='Erro ao consultar dados da Yamaha')
