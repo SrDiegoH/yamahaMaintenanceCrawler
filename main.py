@@ -1,6 +1,6 @@
 import json
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from playwright.async_api import async_playwright
 
 _MOTORCYCLES = {
@@ -121,11 +121,13 @@ async def _get_yamaha_data(name):
         return response.status, response_text
 
 @app.get('/')
-async def index(name):
+async def index(name=None):
     if not name:
-        return None
+        raise HTTPException(status_code=400, detail="O parâmetro 'name' é obrigatório.")
 
-    status, response = _get_yamaha_data(name)
+    status, response = await _get_yamaha_data(name)
 
     if status == 200:
         return _refine_data(response)
+
+    raise HTTPException(status_code=status, detail="Erro ao consultar dados da Yamaha.")
