@@ -50,9 +50,9 @@ _MOTORCYCLES = {
 app = FastAPI()
 
 _get_revision_data = lambda revision: {
-    'revisionByKm': revision.revisionByKm,
-    'revisionByMonth': revision.revisionByMonth,
-    'revisionPriceInCash': revision.priceInCash
+    'revisionByKm': revision['revisionByKm'],
+    'revisionByMonth': revision['revisionByMonth'],
+    'revisionPriceInCash': revision['priceInCash']
 }
 
 def _refine_data(data):
