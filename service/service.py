@@ -45,7 +45,7 @@ async def get_yamaha_revision_table(name, can_use_cache):
 
     should_update_cache = True
 
-    if can_use_cache:
+    if can_use_cache and cached_data:
         return not should_update_cache, cached_data
 
     source_data = await _get_data_from_source(name)

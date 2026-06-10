@@ -13,7 +13,8 @@ def _delete_cache():
 def _read_cache(id):
     try:
         return redis_cache.read_cache(id)
-    except:
+    except Exception as ex:
+        log_info(f'Redis cache error: {ex}')
         return file_cache.read_cache(id)
 
 def _upsert_cache(id, data):
